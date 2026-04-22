@@ -27,7 +27,7 @@ $users = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 // Return the results as JSON
 if (!empty($users)) {
-    echo json_encode(["status" => "success", "data" => $users]);
+    echo json_encode(["status" => true, "data" => $users]);
 } else {
-    echo json_encode(["status" => "danger", "message" => "No users found."]);
+    echo json_encode(["status" => false, "message" => "No users found."]);
 }

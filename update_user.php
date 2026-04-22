@@ -18,7 +18,7 @@ if ($method === 'PUT') {
     // Get the raw input data
     // $input = json_decode(file_get_contents('php://input'), true);
     if (!isset($_POST['name']) || !isset($_POST['gender']) || !isset($_POST['email']) || !isset($_POST['status'])) {
-        echo json_encode(["status" => "error", "message" => "All fields are required."]);
+        echo json_encode(["status" => false, "message" => "All fields are required."]);
         exit;
     }
 
@@ -40,7 +40,7 @@ if ($method === 'PUT') {
             $photoEx = strtolower(pathinfo($_FILES['photo']['name'], PATHINFO_EXTENSION));
 
             if ($photoEx != 'jpg' && $photoEx != 'jpeg' && $photoEx != 'png') {
-                echo json_encode(["status" => "error", "message" => "Invalid photo not allowed."]);
+                echo json_encode(["status" => false, "message" => "Invalid photo not allowed."]);
                 exit;
             }
             unlink('./uploads/' . $row['photo']);
@@ -64,16 +64,16 @@ if ($method === 'PUT') {
         // Execute the query
         if ($stmt->execute()) {
             if ($stmt->rowCount() > 0) {
-                echo json_encode(["status" => "success", "message" => "User updated successfully."]);
+                echo json_encode(["status" => true, "message" => "User updated successfully."]);
             } else {
-                echo json_encode(["status" => "danger", "message" => "Nothing changed."]);
+                echo json_encode(["status" => false, "message" => "Nothing changed."]);
             }
         } else {
-            echo json_encode(["status" => "success", "message" => "Failed to add user."]);
+            echo json_encode(["status" => false, "message" => "Failed to add user."]);
         }
     } catch (PDOException $e) {
-        echo json_encode(["status" => "success", "message" => $e->getMessage()]);
+        echo json_encode(["status" => false, "message" => $e->getMessage()]);
     }
 } else {
-    echo json_encode(["status" => "success", "message" => "Invalid request method."]);
+    echo json_encode(["status" => false, "message" => "Invalid request method."]);
 }
