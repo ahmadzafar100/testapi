@@ -24,6 +24,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $photo = $_FILES['photo']['name'];
     $photoTmp = $_FILES['photo']['tmp_name'];
     $photoEx = strtolower(pathinfo($_FILES['photo']['name'], PATHINFO_EXTENSION));
+    $password = md5('test123');
 
     if ($photoEx != 'jpg' && $photoEx != 'jpeg' && $photoEx != 'png') {
         echo json_encode(["status" => false, "message" => "Invalid photo not allowed."]);
@@ -43,7 +44,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $move = move_uploaded_file($photoTmp, './uploads/' . $filename);
         if ($move) {
             // Prepare the SQL statement
-            $sql = "INSERT INTO users (name, gender, email, status, photo) VALUES (:name, :gender, :email, :status, :photo)";
+            $sql = "INSERT INTO users (name, gender, email, status, photo, password) VALUES (:name, :gender, :email, :status, :photo, :password)";
             $stmt = $pdo->prepare($sql);
 
             // Bind parameters
@@ -52,6 +53,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $stmt->bindParam(':email', $email);
             $stmt->bindParam(':status', $status);
             $stmt->bindParam(':photo', $filename);
+            $stmt->bindParam(':password', $password);
 
             // Execute the query
             if ($stmt->execute()) {
